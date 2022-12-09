@@ -1,7 +1,6 @@
 {
-    "name": "lab13",
+    "name": "what_the_feeds",
     "version": "0.0.0",
-
     "scripts": {
         "dev": "vite",
         "build": "vite build",
@@ -17,5 +16,6 @@
     "devDependencies": {
         "@vitejs/plugin-vue": "^3.1.2",
         "vite": "^3.1.8"
-    }
+    },
+    "type": "module"
 }

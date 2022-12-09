@@ -36,7 +36,6 @@ export const useUsers = defineStore("users", () => {
                 if (currentUser.value.id) {
                     alert("successfully");
                     loginStatus.value = true;
-                    localStorage.setItem("id", currentUser.value.id);
                     getDocs(
                         query(
                             collection(db, "options"),
@@ -46,8 +45,14 @@ export const useUsers = defineStore("users", () => {
                         snap.forEach((post) => {
                             let data = { id: post.id, ...post.data() };
                             localStorage.setItem("dark_theme", data.is_dark_theme);
+                            localStorage.setItem("id", currentUser.value.id);
+                            document.getElementsByTagName("body")[0].style.backgroundColor =
+                                JSON.parse(localStorage.getItem("dark_theme")) ?
+                                "black" :
+                                "white";
                         });
                     });
+
                     router.push({ name: "feeds" });
                 } else {
                     alert("error");
@@ -87,8 +92,9 @@ export const useUsers = defineStore("users", () => {
 
     const logout = () => {
         loginStatus.value = false;
-        localStorage.setItem("id", "");
+        localStorage.clear();
         currentUser.value = {};
+        options.value = {};
         alert("successfully");
     };
 
