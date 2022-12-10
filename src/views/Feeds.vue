@@ -155,7 +155,7 @@ const addPost = (newPost) => {
   addDoc(collection(db, "postFeeds"), post).then((e) => {
     post.id = e.id;
     post.postdate = Timestamp.fromDate(post.postdate);
-    posts.value.shift(post);
+    posts.value.unshift(post);
   });
 };
 
