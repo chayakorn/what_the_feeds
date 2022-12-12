@@ -20,7 +20,7 @@ const myUser = useUsers();
 const posts = ref([]);
 const countPosts = ref(0);
 const status = ref("post");
-const options = ref({});
+const options = ref(myUser.options);
 if (!localStorage.getItem("id")) {
   router.push({ name: "feeds" });
 }
@@ -67,26 +67,6 @@ const getLikedPosts = () => {
       let data = { id: post.id, ...post.data() };
       posts.value.push(data);
     });
-  });
-};
-const getOptions = () => {
-  getDocs(
-    query(
-      collection(db, "options"),
-      where("user_id", "==", myUser.currentUser.id)
-    )
-  ).then(async (snap) => {
-    if (snap.empty) {
-      options.value = { is_dark_theme: true, user_id: myUser.currentUser.id };
-      await addDoc(collection(db, "options"), options.value).then((e) => {
-        options.value.id = e.id;
-      });
-    } else {
-      snap.forEach((post) => {
-        let data = { id: post.id, ...post.data() };
-        options.value = data;
-      });
-    }
   });
 };
 
@@ -274,9 +254,7 @@ onMounted(() => {
         <li class="nav-item" style="cursor: pointer">
           <a
             :class="['nav-link', status == 'option' ? 'active' : '']"
-            @click="
-              status == 'options' ? '' : ((status = 'options'), getOptions())
-            "
+            @click="status == 'options' ? '' : (status = 'options')"
             >Option</a
           >
         </li>

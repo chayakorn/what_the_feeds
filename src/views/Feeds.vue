@@ -12,6 +12,7 @@ import {
   orderBy,
   updateDoc,
 } from "@firebase/firestore";
+import { getStorage, uploadBytes, ref as stRef } from "firebase/storage";
 import { ref, onMounted } from "vue";
 import Post from "../components/Post.vue";
 import NewPost from "../components/Newpost.vue";
@@ -142,16 +143,23 @@ const addComment = (newComment, index) => {
   });
 };
 
-const addPost = (newPost) => {
-  console.log(myUser.currentUser.id);
+const addPost = async (newPost, img) => {
+  const dbStorage = getStorage();
+  const ImgRef = stRef(dbStorage, "postImg/" + img.name);
+  await uploadBytes(ImgRef, img);
   const post = {
     body: newPost,
     dislike: [],
     like: [],
+    img:
+      "https://firebasestorage.googleapis.com/v0/b/int305fb017.appspot.com/o/postImg%2F" +
+      img.name +
+      "?alt=media&token=a677e011-df18-4cc0-9ec3-6ce55ff0043f",
     ishide: false,
     user: myUser.currentUser.id ? myUser.currentUser.id : "",
     postdate: new Date(),
   };
+
   addDoc(collection(db, "postFeeds"), post).then((e) => {
     post.id = e.id;
     post.postdate = Timestamp.fromDate(post.postdate);

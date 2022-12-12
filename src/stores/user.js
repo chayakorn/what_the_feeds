@@ -44,14 +44,25 @@ export const useUsers = defineStore("users", () => {
                     ).then((snap) => {
                         snap.forEach((post) => {
                             let data = { id: post.id, ...post.data() };
+                            options.value = data;
                             localStorage.setItem("dark_theme", data.is_dark_theme);
                             localStorage.setItem("id", currentUser.value.id);
+                            console.log("what");
                             document.getElementsByTagName("body")[0].style.backgroundColor =
                                 JSON.parse(localStorage.getItem("dark_theme")) ?
                                 "black" :
                                 "white";
                         });
                     });
+
+                    if (!localStorage.getItem("id")) {
+                        localStorage.setItem("id", currentUser.value.id);
+                        localStorage.setItem("dark_theme", true);
+                        document.getElementsByTagName("body")[0].style.backgroundColor =
+                            JSON.parse(localStorage.getItem("dark_theme")) ?
+                            "black" :
+                            "white";
+                    }
 
                     router.push({ name: "feeds" });
                 } else {
@@ -85,6 +96,10 @@ export const useUsers = defineStore("users", () => {
                     if (currentUser.value.id) {
                         loginStatus.value = true;
                         localStorage.setItem("id", currentUser.value.id);
+                        document.getElementsByTagName("body")[0].style.backgroundColor =
+                            JSON.parse(localStorage.getItem("dark_theme")) ?
+                            "black" :
+                            "white";
                     }
                 });
         }

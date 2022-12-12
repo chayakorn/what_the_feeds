@@ -142,9 +142,12 @@ onMounted(() => {
       </div>
 
       <div class="m-3">
-        <p>
+        <div>
           {{ post.body }}
-        </p>
+          <div v-if="props.post.img" class="d-flex justify-content-center">
+            <img height="300" :src="props.post.img" alt="" />
+          </div>
+        </div>
       </div>
 
       <div
