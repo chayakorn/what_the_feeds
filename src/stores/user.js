@@ -9,6 +9,7 @@ import {
     where,
     doc,
     updateDoc,
+    addDoc,
 } from "firebase/firestore";
 import router from "../router/index.js";
 
@@ -19,7 +20,7 @@ export const useUsers = defineStore("users", () => {
     const options = ref({});
 
     const login = async(username, password) => {
-        getDocs(
+        await getDocs(
                 query(
                     userRef,
                     where("__name__", "==", username),
@@ -47,7 +48,6 @@ export const useUsers = defineStore("users", () => {
                             options.value = data;
                             localStorage.setItem("dark_theme", data.is_dark_theme);
                             localStorage.setItem("id", currentUser.value.id);
-                            console.log("what");
                             document.getElementsByTagName("body")[0].style.backgroundColor =
                                 JSON.parse(localStorage.getItem("dark_theme")) ?
                                 "black" :
@@ -57,7 +57,12 @@ export const useUsers = defineStore("users", () => {
 
                     if (!localStorage.getItem("id")) {
                         localStorage.setItem("id", currentUser.value.id);
-                        localStorage.setItem("dark_theme", true);
+                        options.value = {
+                            user_id: currentUser.value.id,
+                            is_dark_theme: false,
+                        };
+                        addDoc(collection(db, "options"), options.value);
+                        localStorage.setItem("dark_theme", false);
                         document.getElementsByTagName("body")[0].style.backgroundColor =
                             JSON.parse(localStorage.getItem("dark_theme")) ?
                             "black" :
@@ -87,6 +92,7 @@ export const useUsers = defineStore("users", () => {
                         ).then((snap) => {
                             snap.forEach((post) => {
                                 let data = { id: post.id, ...post.data() };
+                                options.value = data;
                                 localStorage.setItem("dark_theme", data.is_dark_theme);
                             });
                         });
@@ -111,6 +117,7 @@ export const useUsers = defineStore("users", () => {
         currentUser.value = {};
         options.value = {};
         alert("successfully");
+        router.push({ name: "feeds" });
     };
 
     const updateUser = (user, id) => {
