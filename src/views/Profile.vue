@@ -21,6 +21,7 @@ const posts = ref([]);
 const countPosts = ref(0);
 const status = ref("post");
 const options = ref(myUser.options);
+
 if (!localStorage.getItem("id")) {
   router.push({ name: "feeds" });
 }
@@ -52,7 +53,8 @@ const getLikedPosts = () => {
   getCountFromServer(
     query(
       collection(db, "postFeeds"),
-      where("like", "array-contains", myUser.currentUser.id)
+      where("like", "array-contains", myUser.currentUser.id),
+      where("ishide", "==", false)
     )
   ).then((e) => {
     countPosts.value = e.data().count;
@@ -60,7 +62,8 @@ const getLikedPosts = () => {
   getDocs(
     query(
       collection(db, "postFeeds"),
-      where("like", "array-contains", myUser.currentUser.id)
+      where("like", "array-contains", myUser.currentUser.id),
+      where("ishide", "==", false)
     )
   ).then((snap) => {
     snap.forEach((post) => {
@@ -70,11 +73,65 @@ const getLikedPosts = () => {
   });
 };
 
-const updateOptions = () => {
-  options.value.is_dark_theme = !options.value.is_dark_theme;
+const getDislikedPosts = () => {
+  posts.value = [];
+  getCountFromServer(
+    query(
+      collection(db, "postFeeds"),
+      where("dislike", "array-contains", myUser.currentUser.id),
+      where("ishide", "==", false)
+    )
+  ).then((e) => {
+    countPosts.value = e.data().count;
+  });
+  getDocs(
+    query(
+      collection(db, "postFeeds"),
+      where("dislike", "array-contains", myUser.currentUser.id),
+      where("ishide", "==", false)
+    )
+  ).then((snap) => {
+    snap.forEach((post) => {
+      let data = { id: post.id, ...post.data() };
+      posts.value.push(data);
+    });
+  });
+};
+
+const getOptions = () => {
+  if (!options.value.user_id)
+    getDocs(
+      query(
+        collection(db, "options"),
+        where("user_id", "==", myUser.currentUser.id)
+      )
+    ).then((snap) => {
+      snap.forEach((option) => {
+        let data = { id: option.id, ...option.data() };
+        options.value = data;
+        localStorage.setItem("dark_theme", data.is_dark_theme);
+      });
+    });
+};
+const updateOptions = (e) => {
+  console.log(e.srcElement.id);
+  if (e.srcElement.id == "dark_theme")
+    options.value.is_dark_theme = !options.value.is_dark_theme;
+  if (e.srcElement.id == "mobile_auth")
+    options.value.auth
+      ? (options.value.auth.mobile = !options.value.auth.mobile)
+      : (options.value.auth = { mobile: true, email: false });
+
+  if (e.srcElement.id == "email_auth")
+    options.value.auth
+      ? (options.value.auth.email = !options.value.auth.email)
+      : (options.value.auth = { mobile: false, email: true });
+
   updateDoc(doc(db, "options", options.value.id), {
     is_dark_theme: options.value.is_dark_theme,
+    auth: options.value.auth,
   });
+
   localStorage.setItem("dark_theme", options.value.is_dark_theme);
   document.getElementsByTagName("body")[0].style.backgroundColor = JSON.parse(
     localStorage.getItem("dark_theme")
@@ -87,6 +144,7 @@ const updatePost = (index) => {
   updateDoc(doc(db, "postFeeds", posts.value[index].id), {
     like: posts.value[index].like ? posts.value[index].like : [],
     dislike: posts.value[index].dislike ? posts.value[index].dislike : [],
+    ishide: posts.value[index].ishide,
   });
 };
 const like = (index, bool) => {
@@ -176,6 +234,7 @@ const getLuckyNumber = () => {
 };
 
 const hideUnhide = (index) => {
+  console.log(index);
   posts.value[index].ishide = !posts.value[index].ishide;
   updatePost(index);
 };
@@ -253,8 +312,21 @@ onMounted(() => {
         </li>
         <li class="nav-item" style="cursor: pointer">
           <a
-            :class="['nav-link', status == 'option' ? 'active' : '']"
-            @click="status == 'options' ? '' : (status = 'options')"
+            :class="['nav-link', status == 'dislikedpost' ? 'active' : '']"
+            @click="
+              status == 'dislikedpost'
+                ? ''
+                : ((status = 'dislikedpost'), getDislikedPosts())
+            "
+            >Disliked Post</a
+          >
+        </li>
+        <li class="nav-item" style="cursor: pointer">
+          <a
+            :class="['nav-link', status == 'options' ? 'active' : '']"
+            @click="
+              status == 'options' ? '' : (status = 'options'), getOptions()
+            "
             >Option</a
           >
         </li>
@@ -268,6 +340,8 @@ onMounted(() => {
               ? "Liked Posts"
               : status == "options"
               ? "Options"
+              : status == "dislikedpost"
+              ? "Disliked Posts"
               : `All Posts`
           }}{{ status == "options" ? "" : `(${countPosts})` }}
         </h5>
@@ -278,6 +352,7 @@ onMounted(() => {
             :key="post.id"
             :post="post"
             :index="index"
+            :owner="!(status == 'likedpost' || status == 'dislikedpost')"
             @like="like"
             @unlike="unlike"
             @dislike="dislike"
@@ -295,11 +370,66 @@ onMounted(() => {
                     <input
                       class="form-check-input"
                       type="checkbox"
-                      :checked="options.is_dark_theme"
-                      @click="updateOptions()"
-                    /><span class="ml-5"
+                      id="dark_theme"
+                      :checked="options ? options.is_dark_theme : false"
+                      @click="updateOptions"
+                    /><span class="mx-5"
                       >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                       Dark Theme
+                    </span>
+                  </div>
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <h6 class="m-3 h6">Authentication</h6>
+
+            <div class="col-xs-12">
+              <div class="form-check">
+                <label class="form-check-label form-check-toggle">
+                  <div class="d-flex">
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      id="mobile_auth"
+                      :checked="
+                        options
+                          ? options.auth
+                            ? options.auth.mobile
+                            : false
+                          : false
+                      "
+                      @click="updateOptions"
+                    /><span class="mx-5"
+                      >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                      Mobile Authentication
+                    </span>
+                  </div>
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-12">
+              <div class="form-check">
+                <label class="form-check-label form-check-toggle">
+                  <div class="d-flex">
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      id="email_auth"
+                      :checked="
+                        options
+                          ? options.auth
+                            ? options.auth.email
+                            : false
+                          : false
+                      "
+                      @click="updateOptions"
+                    /><span class="mx-5"
+                      >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                      Email Authentication
                     </span>
                   </div>
                 </label>

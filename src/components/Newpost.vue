@@ -12,8 +12,9 @@ const addfile = (e) => {
 const addPost = (e) => {
   if (newPost.value) {
     e.preventDefault();
-    emit("addPost", newPost.value, file.value);
+    emit("addPost", newPost.value, file.value ? file.value : "");
     newPost.value = "";
+    file.value = "";
   }
 };
 </script>

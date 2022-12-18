@@ -60,6 +60,7 @@ export const useUsers = defineStore("users", () => {
                         options.value = {
                             user_id: currentUser.value.id,
                             is_dark_theme: false,
+                            auth: { mobile: false, email: false },
                         };
                         addDoc(collection(db, "options"), options.value);
                         localStorage.setItem("dark_theme", false);
@@ -79,35 +80,43 @@ export const useUsers = defineStore("users", () => {
     const refresh = async() => {
         if (localStorage.getItem("id")) {
             await getDocs(
-                    query(userRef, where("__name__", "==", localStorage.getItem("id")))
-                )
-                .then((snap) => {
-                    snap.forEach((doc) => {
-                        currentUser.value = { id: doc.id, ...doc.data() };
-                        getDocs(
+                query(userRef, where("__name__", "==", localStorage.getItem("id")))
+            ).then(async(snap) => {
+                snap.forEach(async(doc) => {
+                    currentUser.value = { id: doc.id, ...doc.data() };
+                    await getDocs(
                             query(
                                 collection(db, "options"),
                                 where("user_id", "==", currentUser.value.id)
                             )
-                        ).then((snap) => {
-                            snap.forEach((post) => {
-                                let data = { id: post.id, ...post.data() };
-                                options.value = data;
-                                localStorage.setItem("dark_theme", data.is_dark_theme);
-                            });
+                        )
+                        .then((snap) => {
+                            if (snap.empty) {
+                                addDoc(collection(db, "options"), {
+                                    user_id: currentUser.value.id,
+                                    is_dark_theme: false,
+                                    auth: { mobile: false, email: false },
+                                });
+                                localStorage.setItem("dark_theme", false);
+                            } else
+                                snap.forEach((post) => {
+                                    let data = { id: post.id, ...post.data() };
+                                    options.value = data;
+                                    localStorage.setItem("dark_theme", data.is_dark_theme);
+                                });
+                        })
+                        .then(() => {
+                            if (currentUser.value.id) {
+                                loginStatus.value = true;
+                                localStorage.setItem("id", currentUser.value.id);
+                                document.getElementsByTagName("body")[0].style.backgroundColor =
+                                    JSON.parse(localStorage.getItem("dark_theme")) ?
+                                    "black" :
+                                    "white";
+                            }
                         });
-                    });
-                })
-                .then(() => {
-                    if (currentUser.value.id) {
-                        loginStatus.value = true;
-                        localStorage.setItem("id", currentUser.value.id);
-                        document.getElementsByTagName("body")[0].style.backgroundColor =
-                            JSON.parse(localStorage.getItem("dark_theme")) ?
-                            "black" :
-                            "white";
-                    }
                 });
+            });
         }
     };
 

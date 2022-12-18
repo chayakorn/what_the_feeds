@@ -30,6 +30,9 @@ const props = defineProps({
     type: Number,
     required: true,
   },
+  owner: {
+    type: Boolean,
+  },
 });
 
 const isShowComment = ref(false);
@@ -123,14 +126,14 @@ onMounted(() => {
             </div>
             <div>
               <div
-                v-if="!props.post.ishide && $route.params.user"
+                v-if="!props.post.ishide && $route.params.user && owner"
                 @click="hide"
                 style="cursor: pointer"
               >
                 <img src="../assets/eye.png" width="30" height="30" alt="" />
               </div>
               <div
-                v-else-if="$route.params.user"
+                v-else-if="$route.params.user && owner"
                 @click="hide"
                 style="cursor: pointer"
               >

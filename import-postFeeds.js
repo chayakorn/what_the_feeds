@@ -1,0 +1,355 @@
+var admin = require("firebase-admin");
+const { getFirestore } = require("firebase-admin/firestore");
+
+var serviceAccount = require("./serviceAccountKey.json");
+
+admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+    databaseURL: "/***** replace with your databaseURL ************/",
+});
+
+var db = getFirestore();
+
+var posts = [{
+        id: "0n6VDfRBIwlxcoxbkva5",
+        comments: [],
+        dislike: [],
+        user: "yok",
+        ishide: false,
+        like: [],
+        body: "Yokx3 The sims 4 แอดมาได้",
+        postdate: "2022-12-10T19:56:20.006Z",
+    },
+    {
+        id: "2Nw0XQHeMdfYCy78RinS",
+        comments: [{
+            lastname: "Di",
+            comment: "โหดจังเลย\n",
+            user_id: "rabmeat",
+            cmtdate: "2022-12-04T16:05:16.523Z",
+            firstname: "J",
+            id: "IoAXgUgXpLJseJi23olQ",
+        }, ],
+        ishide: false,
+        postdate: "2022-12-04T16:04:35.627Z",
+        dislike: [],
+        user: "",
+        body: "Marvel Snap Kodtueng#31342 ได้หมด",
+        like: ["rabmeat"],
+    },
+    {
+        id: "FuQvbipnJ6oc5PJXbriU",
+        comments: [],
+        user: "ppza",
+        postdate: "2022-12-04T11:33:42.877Z",
+        like: [],
+        ishide: false,
+        body: "Onlyfans : milkmilkmilk3ra ",
+    },
+    {
+        id: "GzprtsqJgtsB12Dd1tZP",
+        comments: [{
+                user_id: "rabmeat",
+                firstname: "J",
+                lastname: "Di",
+                comment: "หลอนละ",
+                cmtdate: "2022-12-04T11:30:12.185Z",
+                id: "pyvgObb9ChaqWMjdEdgU",
+            },
+            {
+                comment: '"ขอแสดงความคิดเห็นกับโพสนี้หน่อยเถอะ ดูๆมานานละนะ แต่ก้อไม่อยากจะคอมเม้นอะไรหรอก แต่อดไม่ไหวจริงๆ เลยมาขอพูดอะไรตรงนี้หน่อยเหอะ ว่าจิงๆแล้วก็อยากจะพูดแบบนี้ตั้งนานละ แต่ก้อไม่อยากเม้นหรือพูดอะไรให้มันมากเรื่อง เด๋วคนอื่นหาว่าพูดมาก เอาละ จะเข้าเรื่องละ ก็คือ ตอนแรกๆคือดูๆผ่านๆเฉยๆ ไม่คิดอะไรมาก แต่พอเห็นคนแสดงความคิดเห็นละ ก็อยากที่จะแสดงความคิดเห็นในโพสนี้บ้าง ขอบอกเลยว่าเป็นครั้งแรกที่จะมาคอมเม้น คือแบบทนไม่ได้ละ จิงๆอยากจะคอมเม้นตั้งนานละ อยากคอมเม้นแบบยาวๆๆเลย แต่ขอเม้นแบบสั้นๆๆก็พอแระ เพราะไม่รู้จะพูดมากไปให้มันได้อะไรขึ้นมา ก็ไม่อยากยุ่งมากนักหรอกกะเรื่องพวกนี้ พอดีเป็นคนไม่ค่อยอะไรมาก ไม่อยากคอมเม้นอะไรยาวๆๆ น่ารำคาญ แต่ขอซักทีเหอะ ทนไม่ไหวละจิงๆๆ เอาละนะ จะเริ่มเม้นละนะ ที่อยากจะบอก แต่มันอาจจะยาวนิดนึงนะเพื่อนๆ แต่ยังไงก็ขอออกความเห็นกับเรื่องนี้บ้างเถอะ ไม่สนใจหรอกว่าใครจะว่าจะด่า คือ อยากบอกอะไรนิดหน่อย แต่ว่าก็ขี้เกียจพิมอะไรมากมาย เอาเป็นว่าจะพูดแค่ สั้นๆง่ายๆ ผมว่าผมไม่เม้นดีกว่าครับ ..."',
+                user_id: "rabmeat",
+                firstname: "J",
+                lastname: "Di",
+                cmtdate: "2022-12-04T11:31:03.376Z",
+                id: "jkn1LixR7NRiT10ITurK",
+            },
+        ],
+        user: "ppza",
+        body: "เตียงยังว่าง ๆ คนข้าง ๆ ยังไม่มี #เสี่ยยางปูน",
+        postdate: "2022-12-04T11:29:44.416Z",
+        ishide: false,
+        dislike: [],
+    },
+    {
+        id: "IoP8mrJbh6l69K9aa3t3",
+        comments: [{
+                user_id: "ppza",
+                cmtdate: "2022-12-04T11:26:16.585Z",
+                comment: "อยากแว้นกับพี่ป่าวน้องสาวว",
+                lastname: "Za",
+                firstname: "Pp",
+                id: "l9ez4Ojudp0KrLkFBq9n",
+            },
+            {
+                cmtdate: "2022-12-04T11:26:21.938Z",
+                comment: "ว่าไงวัยรุ่น 👩‍🦼",
+                user_id: "rabmeat",
+                firstname: "J",
+                lastname: "Di",
+                id: "pFMMTRINnbGLgx0dIEdO",
+            },
+            {
+                comment: "ที่ไหนงับพี่ชาย",
+                lastname: "Nut",
+                firstname: "Kuy",
+                cmtdate: "2022-12-04T11:27:19.938Z",
+                user_id: "bklyn",
+                id: "LrcMqkpA9w0cudhZfiSC",
+            },
+            {
+                cmtdate: "2022-12-10T20:01:27.411Z",
+                comment: "สวัสดีน้าบ",
+                id: "JCSSBypFQQrkBfdJJDoT",
+            },
+        ],
+        ishide: false,
+        user: "bklyn",
+        body: "หวัดดีง้าบบบบบบ",
+        postdate: "2022-12-04T11:25:50.225Z",
+        dislike: [],
+    },
+    {
+        id: "L3Us1aSBVq3dVTO5X1Pt",
+        comments: [{
+            firstname: "J",
+            comment: "ชื่อ: เจไดๆๆๆๆ\nความสามารถ: หล่อเท่ไม่เหมือนใคร",
+            user_id: "rabmeat",
+            cmtdate: "2022-12-10T18:07:10.578Z",
+            lastname: "Di",
+            id: "A7bsQ7aBvJcUARypH6nV",
+        }, ],
+        user: "batman",
+        dislike: ["yok"],
+        ishide: false,
+        body: "ข้าคืออัศวินแห่งรัติกาล ความสามารถพิเศษ:รวย กำลังตามหาทีมเพื่อจัดตั้ง Justic League สามารถลงชื่อใต้คอมเมนท์ได้ แล้วข้าจะรอ!",
+        like: ["rabmeat"],
+        postdate: "2022-12-10T16:39:35.467Z",
+    },
+    {
+        id: "MWxxhG7K7BuEfvm36Lmd",
+        comments: [],
+        body: "hello ",
+        user: "",
+        postdate: "2022-12-10T16:36:56.122Z",
+        dislike: [],
+        like: [],
+        ishide: false,
+    },
+    {
+        id: "XHi5UY1BhAElFAwlLEYK",
+        comments: [],
+        user: "ppza",
+        like: [],
+        dislike: ["rabmeat"],
+        ishide: false,
+        postdate: "2022-12-04T11:35:53.600Z",
+        body: "แชทนี้ไว้สำหรับส่งเว็บให้พร",
+    },
+    {
+        id: "haiigTYbABJShJDjtA0L",
+        comments: [],
+        dislike: [],
+        ishide: false,
+        body: "เทส(เว็บ)ดี",
+        like: [],
+        user: "yok",
+        postdate: "2022-12-10T19:57:38.173Z",
+    },
+    {
+        id: "jQnT4dMHWaCOYcCQqMvY",
+        comments: [],
+        postdate: "2022-12-10T19:56:43.617Z",
+        like: [],
+        ishide: false,
+        dislike: [],
+        user: "",
+        body: "อยากได้ฟีเจอร์ลบโพสต์",
+    },
+    {
+        id: "kWvEh9DvAX4IA5DQC6GU",
+        comments: [{
+            user_id: "rabmeat",
+            lastname: "Di",
+            comment: "👀👀👀👀👀👀👀👀👀",
+            cmtdate: "2022-12-04T11:26:49.393Z",
+            firstname: "J",
+            id: "2VbHSUwfwyD2VGn0KqCa",
+        }, ],
+        user: "ppza",
+        body: "รับงาน N ค่ะทำได้ทุกอย่าง 1500 ต่อคืน",
+        like: [],
+        postdate: "2022-12-04T11:25:34.859Z",
+        ishide: false,
+    },
+    {
+        id: "kmWycbZ3EMSTv5y7Mr8K",
+        comments: [{
+                firstname: "J",
+                user_id: "rabmeat",
+                lastname: "Di",
+                comment: "คนไม่ใช่ ใจก้ชำรุด #ปวดใจ",
+                cmtdate: "2022-12-04T11:23:22.266Z",
+                id: "l6MUa01dXLraSgVf6ZMo",
+            },
+            {
+                comment: "คุนนี่ idol เลย",
+                cmtdate: "2022-12-04T11:25:01.993Z",
+                id: "WnZsUWVS9m38VJvDWWOj",
+            },
+            {
+                user_id: "ppza",
+                cmtdate: "2022-12-04T11:25:22.223Z",
+                lastname: "Za",
+                comment: "รับงาน N ค่ะ ทำได้ทุกอย่าง",
+                firstname: "Pp",
+                id: "10cvwZXzfaRx8TDTgcFX",
+            },
+        ],
+        user: "ppza",
+        body: "ทำอย่างไรให้เธอรักผม #โจ๊กเกอร์ #รับงานชลบุรี #รักคนเดียว",
+        postdate: "2022-12-04T11:22:42.314Z",
+        ishide: false,
+        like: ["yok"],
+        dislike: [],
+    },
+    {
+        id: "kw3ubARUKWvc39dIjLLe",
+        comments: [{
+            firstname: "อุ๋ง",
+            lastname: "อิ๋ง",
+            cmtdate: "2022-12-10T19:54:51.375Z",
+            user_id: "yok",
+            comment: "อย่าลืมทักมา",
+            id: "TlOY7TUHW0nw3hmjjdkv",
+        }, ],
+        postdate: "2022-12-04T11:21:52.000Z",
+        body: "ไลค์ทัก",
+        like: [{ firstname: "J", id: "rabmeat", lastname: "Di" }, "yok"],
+        user: "rabmeat",
+        ishide: false,
+        dislike: [{ lastname: "Di", id: "rabmeat", firstname: "J" }],
+    },
+    {
+        id: "mbRAYCHMQXBSA3UYog7M",
+        comments: [],
+        body: "ง่วงวะ",
+        postdate: "2022-12-11T14:01:12.523Z",
+        user: "ppza",
+        like: [],
+        dislike: [],
+        ishide: false,
+    },
+    {
+        id: "nYgSP7hecHjM54R52N5q",
+        comments: [],
+        like: [],
+        postdate: "2022-12-04T11:31:00.913Z",
+        ishide: false,
+        body: "https://www.youtube.com/watch?v=YsngChCCYw8 ลองกดดูสิ",
+        dislike: [],
+        user: "ppza",
+    },
+    {
+        id: "rBDbvGsGHs0c2Xyu2jDZ",
+        comments: [{
+            cmtdate: "2022-12-10T20:00:43.290Z",
+            comment: " Have Room, Have Condom Have K-Y, Good Take Care, Do Everything",
+            id: "1930ZDhMVs7cq2OuuVxO",
+        }, ],
+        like: ["batman"],
+        body: "Hello, welcome ",
+        dislike: [],
+        user: "batman",
+        postdate: "2022-12-10T16:37:14.494Z",
+        ishide: false,
+    },
+    {
+        id: "rr8hvpxCf6RyQZVjUmaw",
+        comments: [],
+        dislike: [],
+        ishide: false,
+        body: "เทส(เว็บ)ดี v.2",
+        postdate: "2022-12-10T20:02:53.718Z",
+        user: "",
+        like: [],
+    },
+    {
+        id: "tCiJBCI2Gm79jzpv0SIu",
+        comments: [],
+        like: ["batman"],
+        user: "yok",
+        dislike: [],
+        postdate: "2022-12-13T11:30:00.982Z",
+        img: "https://firebasestorage.googleapis.com/v0/b/int305fb017.appspot.com/o/postImg%2FD0AC74FF-7B54-425D-8ECD-7E9DE22DAA01.png?alt=media&token=a677e011-df18-4cc0-9ec3-6ce55ff0043f",
+        body: "mouse mai ตึงๆ",
+        ishide: false,
+    },
+    {
+        id: "vS6wmya01YWZAyOUvKg2",
+        comments: [{
+            comment: "เกินไปมั้ย\n",
+            lastname: "Di",
+            cmtdate: "2022-12-04T11:21:11.968Z",
+            firstname: "J",
+            user_id: "rabmeat",
+            id: "hR5GLFHBruluyh2o3ail",
+        }, ],
+        ishide: false,
+        dislike: [
+            { lastname: "Di", firstname: "J", id: "rabmeat" },
+            { id: "rabmeat", firstname: "J", lastname: "Di" },
+            { id: "rabmeat", lastname: "Di", firstname: "J" },
+            { firstname: "J", id: "rabmeat", lastname: "Di" },
+            { lastname: "Di", id: "rabmeat", firstname: "J" },
+            { lastname: "Di", id: "rabmeat", firstname: "J" },
+            { lastname: "Di", id: "rabmeat", firstname: "J" },
+            { lastname: "Di", firstname: "J", id: "rabmeat" },
+            { lastname: "Di", firstname: "J", id: "rabmeat" },
+            "yok",
+        ],
+        user: "rabmeat",
+        like: [{ firstname: "J", lastname: "Di", id: "rabmeat" }],
+        postdate: "2022-12-04T11:20:37.121Z",
+        body: "สาหวาดีครับทุกคน",
+    },
+    {
+        id: "wYAmc07NFL4r9B6ss46x",
+        comments: [],
+        like: [],
+        ishide: false,
+        postdate: "2022-12-04T11:32:09.969Z",
+        body: "ผมหล่อ",
+        user: "rabmeat",
+        dislike: [],
+    },
+];
+
+posts.forEach(function(obj) {
+    db.collection("postFeeds")
+        .doc(obj.id)
+        .set({
+            body: obj.body,
+            dislike: obj.dislike ? obj.dislike : [],
+            like: obj.like ? obj.like : [],
+            ishide: obj.ishide,
+            postdate: new Date(obj.postdate),
+            user: obj.user,
+        })
+        .then((docRef) => {
+            console.log("PostFeed written with ID : " + obj.id);
+        });
+    if (obj.comments) {
+        obj.comments.forEach((comment) => {
+            let id = comment.id;
+            comment.cmtdate = new Date(comment.cmtdate);
+            delete comment.id;
+            db.collection("postFeeds/" + obj.id + "/comments")
+                .doc(id)
+                .set(comment)
+                .then((docRef) => {
+                    console.log("Comment written with ID : " + id);
+                });
+        });
+    }
+});
